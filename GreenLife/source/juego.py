@@ -66,7 +66,8 @@ class Enemy(pygame.sprite.Sprite):
             (player.rect.left,player.rect.top)=(xr,yr)
             self.rect.left= 1450
             self.rect.top = 720/2
-            player.lifes-=1
+            global seconds
+            seconds += 5
         if self.rect.left <= -20:
             self.rect.left= 1450
             self.rect.top = 720/2
@@ -92,9 +93,10 @@ class Object(pygame.sprite.Sprite):
             self.rect.top = randint(200,400)
             self.rect.left = randint(1280,2000)
             player.points+=points
-        if self.rect.left <= -20:
+        if self.rect.left <= -40:
             self.rect.top = randint(200,400)
             self.rect.left = randint(1280,2000)
+            player.lifes -= 1
 
 class Cursor(pygame.Rect):
     def __init__(self):
@@ -163,6 +165,11 @@ def Game(endgame,fondo,life,venemy,vobject1,vobject2,goal,pointsg,tlimit):
                 ifondo = pygame.image.load("../assets/Fondos/esc12.png").convert_alpha()
             if seconds>tlimit/3*2 and seconds<tlimit:
                 ifondo = pygame.image.load("../assets/Fondos/esc13.png").convert_alpha()
+        if fondo==2:
+            if seconds>tlimit/3 and seconds<=tlimit/3 *2:
+                ifondo = pygame.image.load("../assets/Fondos/esc2.png").convert_alpha()
+            if seconds>tlimit/3*2 and seconds<tlimit:
+                ifondo = pygame.image.load("../assets/Fondos/esc2.png").convert_alpha()
 
         #Chronometer
         if termino == False:

@@ -1,4 +1,4 @@
-import pygame,sys 
+import pygame,sys
 from random import randint
 from pygame.locals import *
 from juego import *
@@ -31,7 +31,7 @@ def menu():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if cursor1.colliderect(start.rect):
                     objetive =fuente1.render("Obten 100 puntos en 30 segundos",0,(0,0,0))
-                    Game(False,1,3,25,20,20,objetive,50,25)
+                    Game(False,2,3,25,20,20,objetive,50,25)
                 if cursor1.colliderect(equis.rect):
                     salir=True
                     pygame.quit()
@@ -43,6 +43,6 @@ def menu():
         ventana.blit(ifondo,(0,0))
         start.update(ventana,cursor1)
         equis.update(ventana,cursor1)
-        pygame.display.update()  
+        pygame.display.update()
 
 menu()
