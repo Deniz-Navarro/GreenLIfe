@@ -12,9 +12,9 @@ class Character(pygame.sprite.Sprite):
         self.rect= self.ipersonaje.get_rect()
         self.rect.top = 720/2
         self.rect.left = 1280/2
-        self.speed = 180
         self.lifes = lifes
         self.points = 0
+        self.salto = False
         segundos = "0"
 
     def draw(self,surface): #Draw Character
@@ -23,10 +23,12 @@ class Character(pygame.sprite.Sprite):
     def move(self,event,termino): #Player move
         if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
-                    self.rect.top -= self.speed
+                    if self.rect.top == 360:
+                        self.salto = True
+
         if event.type == pygame.KEYUP:
                 if event.key == pygame.K_UP:
-                    self.rect.top += self.speed
+                    self.salto = False
 
     def drawl(self,surface,fuente): #Draw Lifes
         lifess = str(self.lifes)
@@ -49,9 +51,9 @@ class Character(pygame.sprite.Sprite):
 class Enemy(pygame.sprite.Sprite):
     def __init__(self,speed):
         pygame.sprite.Sprite.__init__(self)
-        self.iciclista = pygame.image.load("../assets/Personajes/NPC/ciclista.png").convert_alpha()
+        self.iciclista = pygame.image.load("../assets/Items/piedra.png").convert_alpha()
         self.rect= self.iciclista.get_rect()
-        self.rect.top = 720/2
+        self.rect.top = 425
         self.rect.left = 1450
         self.speed = speed
 
@@ -65,19 +67,19 @@ class Enemy(pygame.sprite.Sprite):
         if self.rect.colliderect(player.rect):
             (player.rect.left,player.rect.top)=(xr,yr)
             self.rect.left= 1450
-            self.rect.top = 720/2
+            self.rect.top = 425
             global seconds
             seconds += 5
         if self.rect.left <= -20:
             self.rect.left= 1450
-            self.rect.top = 720/2
+            self.rect.top = 425
 
 class Object(pygame.sprite.Sprite):
     def __init__(self,speed,imagen):
         pygame.sprite.Sprite.__init__(self)
         self.iobject = imagen
         self.rect= self.iobject.get_rect()
-        self.rect.top = randint(200,400)
+        self.rect.top = randint(160,400)
         self.rect.left = randint(1280,1500)
         self.speed = speed
 
@@ -137,6 +139,8 @@ def Game(endgame,fondo,life,venemy,vobject1,vobject2,goal,pointsg,tlimit):
     texto1= goal
     rojo=(200,20,50)
     verde=(50,205,50)
+    altlimit = False
+    cx = 1300
     #Images
     if fondo == 1:
         ifondo = pygame.image.load("../assets/Fondos/esc11.png").convert_alpha()
@@ -145,9 +149,10 @@ def Game(endgame,fondo,life,venemy,vobject1,vobject2,goal,pointsg,tlimit):
         ifondo = pygame.image.load("../assets/Fondos/esc2.png").convert_alpha()
     ipapel = pygame.image.load("../assets/Items/papel.png").convert_alpha()
     iperiodico = pygame.image.load("../assets/Items/periodico.png").convert_alpha()
+    ciclista = pygame.image.load("../assets/Personajes/NPC/ciclista.png").convert_alpha()
     #Calling Classes
     player = Character(life)
-    ciclista = Enemy(venemy)
+    piedra = Enemy(venemy)
     objeto = Object(vobject1,ipapel)
     objeto2 = Object(vobject2,iperiodico)
     if endgame!=True:
@@ -160,6 +165,16 @@ def Game(endgame,fondo,life,venemy,vobject1,vobject2,goal,pointsg,tlimit):
                 global seconds
                 seconds = 0
             player.move(event,termino)
+        if player.salto == True and player.rect.top >= 160 and altlimit == False:
+            player.rect.top -=40
+        if player.salto == False and player.rect.top < 720/2 and altlimit == False:
+            player.rect.top +=40
+        if player.rect.top == 120:
+            altlimit = True
+        if player.rect.top == 720/2:
+            altlimit = False
+        if altlimit == True and player.rect.top < 720/2:
+            player.rect.top += 40
         if fondo==1:
             if seconds>tlimit/3 and seconds<=tlimit/3 *2:
                 ifondo = pygame.image.load("../assets/Fondos/esc12.png").convert_alpha()
@@ -169,7 +184,7 @@ def Game(endgame,fondo,life,venemy,vobject1,vobject2,goal,pointsg,tlimit):
             if seconds>tlimit/3 and seconds<=tlimit/3 *2:
                 ifondo = pygame.image.load("../assets/Fondos/esc2.png").convert_alpha()
             if seconds>tlimit/3*2 and seconds<tlimit:
-                ifondo = pygame.image.load("../assets/Fondos/esc2.png").convert_alpha()
+                ifondo = pygame.image.load("../assets/Fondos/esc22.png").convert_alpha()
 
         #Chronometer
         if termino == False:
@@ -178,18 +193,22 @@ def Game(endgame,fondo,life,venemy,vobject1,vobject2,goal,pointsg,tlimit):
         reloj1.tick(15) #Frame Counter
         #End Game
         if termino == False:
-            ciclista.collision(player)
+            piedra.collision(player)
             objeto.collision(player,5)
             objeto2.collision(player,10)
+            cx -= 20
+            if cx <= -1300:
+                cx = 1300
         #Draw on the surface
         ventana.blit(ifondo,(0,0))
+        ventana.blit(ciclista,(cx,300))
         player.draw(ventana)
         player.drawl(ventana,fuente1)
         player.drawp(ventana,fuente1)
         ventana.blit(texto1,(50,20))
         chronometer=fuente1.render(segundos,0,(0,0,0))
         ventana.blit(chronometer,(1200,650)) #Draw Chronometer
-        ciclista.draw(ventana)
+        piedra.draw(ventana)
         objeto.draw(ventana)
         objeto2.draw(ventana)
         #Lose Condition

@@ -31,7 +31,7 @@ def menu():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if cursor1.colliderect(start.rect):
                     objetive =fuente1.render("Obten 100 puntos en 30 segundos",0,(0,0,0))
-                    Game(False,2,3,25,20,20,objetive,50,25)
+                    Game(False,2,3,25,20,20,objetive,100,30)
                 if cursor1.colliderect(equis.rect):
                     salir=True
                     pygame.quit()
