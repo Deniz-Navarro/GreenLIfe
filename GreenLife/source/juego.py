@@ -120,8 +120,8 @@ class Button(pygame.sprite.Sprite):
 
         surface.blit(self.imagen_actual,self.rect)
 
-def Game(endgame,fondo,life,venemy,vobject1,vobject2,goal,pointsg,tlimit):
-
+def Game(endgame,fondo,life,venemy,vobject1,vobject2,goal,pointsg,tlimit,goal2):
+    ss = 0
     def crono():
         if endgame == False:
             global seconds
@@ -138,8 +138,10 @@ def Game(endgame,fondo,life,venemy,vobject1,vobject2,goal,pointsg,tlimit):
     fuente1 = pygame.font.SysFont ("Arial",30,True,False)
     fuente2 = pygame.font.SysFont ("Arial",100,True,False)
     texto1= goal
+    texto2=goal2
     rojo=(200,20,50)
     verde=(50,205,50)
+    blanco=(255,255,255)
     altlimit = False
     cx = 1300
     #Images
@@ -159,12 +161,28 @@ def Game(endgame,fondo,life,venemy,vobject1,vobject2,goal,pointsg,tlimit):
     if endgame!=True:
         hilo = threading.Thread(target=crono, args=())
         hilo.start()
+    while ss <= 5:
+        if ss <= 3:
+            ventana.fill(blanco)
+            ventana.blit(texto2,(200,720/2))
+        else:
+            ventana.fill(rojo )
+            lectura=fuente2.render("Listo!",0,(0,0,0))
+            ventana.blit(lectura,(1280/2-200,720/2))
+        ss +=1
+        time.sleep(1)
+        pygame.display.update()
+    global seconds
+    seconds = 0
     while endgame!=True: #Loop principal
         for event in pygame.event.get(): #Corre todos los eventos en pygame
             if event.type == pygame.QUIT:
                 endgame=True
-                global seconds
                 seconds = 0
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    endgame=True
+                    seconds = 0
             player.move(event,termino)
         if player.salto == True and player.rect.top >= 160 and altlimit == False:
             player.rect.top -=40

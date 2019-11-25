@@ -8,6 +8,7 @@ def world1():
     ventana=pygame.display.set_mode([1280,720])
     salir=False
     fuente1 = pygame.font.SysFont ("Arial",30,True,False)
+    fuente2 = pygame.font.SysFont ("Arial",60,True,False)
     naranjita = (255,183,98)
     reloj1=pygame.time.Clock()
     ilvl1 = pygame.image.load("../assets/Items/nvl1.png").convert_alpha()
@@ -32,13 +33,16 @@ def world1():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if cursor1.colliderect(lvl1.rect):
                     objetive =fuente1.render("Obten 50 puntos en 30 segundos!",0,(0,0,0))
-                    Game(False,1,7,20,15,15,objetive,50,30)
+                    objetive2 =fuente2.render("Obten 50 puntos en 30 segundos!",0,(0,0,0))
+                    Game(False,1,7,25,15,15,objetive,50,30,objetive2)
                 if cursor1.colliderect(lvl2.rect):
                     objetive =fuente1.render("Obten 70 puntos en 35 segundos",0,(0,0,0))
-                    Game(False,1,5,25,20,20,objetive,70,35)
+                    objetive2 =fuente2.render("Obten 70 puntos en 35 segundos",0,(0,0,0))
+                    Game(False,1,5,25,20,20,objetive,70,35,objetive2)
                 if cursor1.colliderect(lvl3.rect):
                     objetive =fuente1.render("Obten 100 puntos en 30 segundos",0,(0,0,0))
-                    Game(False,1,5,30,25,25,objetive,100,30)
+                    objetive2 =fuente2.render("Obten 100 puntos en 30 segundos",0,(0,0,0))
+                    Game(False,1,5,30,25,25,objetive,100,30,objetive2)
                 if cursor1.colliderect(back.rect):
                     salir=True
 
