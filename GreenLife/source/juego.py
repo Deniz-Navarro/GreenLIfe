@@ -133,6 +133,7 @@ def Game(endgame,fondo,life,venemy,vobject1,vobject2,goal,pointsg,tlimit):
     pygame.display.set_caption("GREEN LIFE")
     #Variables
     termino = False
+    win=False
     reloj1=pygame.time.Clock()
     fuente1 = pygame.font.SysFont ("Arial",30,True,False)
     fuente2 = pygame.font.SysFont ("Arial",100,True,False)
@@ -182,7 +183,7 @@ def Game(endgame,fondo,life,venemy,vobject1,vobject2,goal,pointsg,tlimit):
                 ifondo = pygame.image.load("../assets/Fondos/esc13.png").convert_alpha()
         if fondo==2:
             if seconds>tlimit/3 and seconds<=tlimit/3 *2:
-                ifondo = pygame.image.load("../assets/Fondos/esc2.png").convert_alpha()
+                ifondo = pygame.image.load("../assets/Fondos/esc21.png").convert_alpha()
             if seconds>tlimit/3*2 and seconds<tlimit:
                 ifondo = pygame.image.load("../assets/Fondos/esc22.png").convert_alpha()
 
@@ -212,15 +213,17 @@ def Game(endgame,fondo,life,venemy,vobject1,vobject2,goal,pointsg,tlimit):
         objeto.draw(ventana)
         objeto2.draw(ventana)
         #Lose Condition
-        if player.lifes == 0 or seconds >= tlimit:
-            termino = True
-            ventana.fill(rojo)
-            player.lose(ventana,fuente2)
+        if win == False:
+            if player.lifes == 0 or seconds >= tlimit:
+                termino = True
+                ventana.fill(rojo)
+                player.lose(ventana,fuente2)
         #Win Condition
-        if player.points >= pointsg and seconds < tlimit:
+        if player.points >= pointsg and seconds < tlimit or win == True:
             termino = True
             ventana.fill(verde)
             player.win(ventana,fuente2)
+            win = True
         if endgame == True:
             seconds = 0
         pygame.display.update()

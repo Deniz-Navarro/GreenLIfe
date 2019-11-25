@@ -2,6 +2,8 @@ import pygame,sys
 from random import randint
 from pygame.locals import *
 from juego import *
+from world1 import *
+from world2 import *
 
 def munditos():
     pygame.init()
@@ -28,11 +30,9 @@ def munditos():
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if cursor1.colliderect(mundo1.rect):
-                    objetive =fuente1.render("Obten 100 puntos en 30 segundos",0,(0,0,0))
-                    Game(False,1,5,25,20,20,objetive,100,30)
+                    world1()
                 if cursor1.colliderect(mundo2.rect):
-                    objetive =fuente1.render("Obten 50 puntos en 20 segundos",0,(0,0,0))
-                    Game(False,2,3,30,20,20,objetive,50,20)
+                    world2()
                 if cursor1.colliderect(back.rect):
                     salir=True
 
