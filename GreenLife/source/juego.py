@@ -169,6 +169,12 @@ def Game(endgame,fondo,life,venemy,vobject1,vobject2,goal,pointsg,tlimit,goal2):
             ventana.fill(rojo )
             lectura=fuente2.render("Listo!",0,(0,0,0))
             ventana.blit(lectura,(1280/2-200,720/2))
+        lectura=fuente1.render("Presiona espacio para omitir",0,(0,0,0))
+        ventana.blit(lectura,(1280/2-200,720-50))
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    ss = 5
         ss +=1
         time.sleep(1)
         pygame.display.update()
