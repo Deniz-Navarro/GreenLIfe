@@ -2,6 +2,7 @@ import pygame,sys
 from random import randint
 from pygame.locals import *
 from juego import *
+from worlds import *
 
 def menu():
     pygame.init()
@@ -30,14 +31,12 @@ def menu():
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if cursor1.colliderect(start.rect):
-                    objetive =fuente1.render("Obten 100 puntos en 30 segundos",0,(0,0,0))
-                    Game(False,2,3,25,20,20,objetive,100,30)
+                    munditos()
                 if cursor1.colliderect(equis.rect):
                     salir=True
                     pygame.quit()
                     sys.exit()
 
-        #reloj1.tick(15)
         cursor1.update()
         ventana.fill(black)
         ventana.blit(ifondo,(0,0))
