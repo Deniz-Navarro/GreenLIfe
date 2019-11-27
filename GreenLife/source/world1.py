@@ -34,15 +34,15 @@ def world1():
                 if cursor1.colliderect(lvl1.rect):
                     objetive =fuente1.render("Obten 50 puntos en 30 segundos!",0,(0,0,0))
                     objetive2 =fuente2.render("Obten 50 puntos en 30 segundos!",0,(0,0,0))
-                    Game(False,1,7,25,15,15,objetive,50,30,objetive2)
+                    Game(False,1,7,20,10,10,objetive,50,30,objetive2)
                 if cursor1.colliderect(lvl2.rect):
                     objetive =fuente1.render("Obten 70 puntos en 35 segundos",0,(0,0,0))
                     objetive2 =fuente2.render("Obten 70 puntos en 35 segundos",0,(0,0,0))
-                    Game(False,1,5,25,20,20,objetive,70,35,objetive2)
+                    Game(False,1,5,20,15,15,objetive,70,35,objetive2)
                 if cursor1.colliderect(lvl3.rect):
                     objetive =fuente1.render("Obten 100 puntos en 30 segundos",0,(0,0,0))
                     objetive2 =fuente2.render("Obten 100 puntos en 30 segundos",0,(0,0,0))
-                    Game(False,1,5,30,25,25,objetive,100,30,objetive2)
+                    Game(False,1,5,25,20,20,objetive,100,30,objetive2)
                 if cursor1.colliderect(back.rect):
                     salir=True
 

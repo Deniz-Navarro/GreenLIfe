@@ -162,11 +162,10 @@ def Game(endgame,fondo,life,venemy,vobject1,vobject2,goal,pointsg,tlimit,goal2):
         hilo = threading.Thread(target=crono, args=())
         hilo.start()
     while ss <= 5:
+        ventana.fill(blanco)
         if ss <= 3:
-            ventana.fill(blanco)
             ventana.blit(texto2,(200,720/2))
         else:
-            ventana.fill(rojo )
             lectura=fuente2.render("Listo!",0,(0,0,0))
             ventana.blit(lectura,(1280/2-200,720/2))
         lectura=fuente1.render("Presiona espacio para omitir",0,(0,0,0))
@@ -187,8 +186,14 @@ def Game(endgame,fondo,life,venemy,vobject1,vobject2,goal,pointsg,tlimit,goal2):
                 seconds = 0
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    endgame=True
-                    seconds = 0
+                    mpause(player,life)
+                    if seconds == 0:
+                        piedra.rect.left = 1300
+                        objeto.rect.top, objeto.rect.left = randint(160,400), randint(1280,1500)
+                        objeto2.rect.top, objeto2.rect.left = randint(160,400), randint(1280,1500)
+                    if seconds == 100:
+                        endgame=True
+                        seconds = 0
             player.move(event,termino)
         if player.salto == True and player.rect.top >= 160 and altlimit == False:
             player.rect.top -=40
@@ -215,7 +220,7 @@ def Game(endgame,fondo,life,venemy,vobject1,vobject2,goal,pointsg,tlimit,goal2):
         if termino == False:
             segundos= str(seconds)
 
-        reloj1.tick(15) #Frame Counter
+        reloj1.tick(20) #Frame Counter
         #End Game
         if termino == False:
             piedra.collision(player)
@@ -250,4 +255,52 @@ def Game(endgame,fondo,life,venemy,vobject1,vobject2,goal,pointsg,tlimit,goal2):
             win = True
         if endgame == True:
             seconds = 0
+        pygame.display.update()
+
+def mpause(player,life):
+    pygame.init()
+    ventana=pygame.display.set_mode([1280,720])
+    salir=False
+    fuente1 = pygame.font.SysFont ("Arial",30,True,False)
+    fuente2 = pygame.font.SysFont ("Arial",60,True,False)
+    blanco = (255,255,255)
+    reloj1=pygame.time.Clock()
+    ifondo = pygame.image.load("../assets/Fondos/Pause.png").convert_alpha()
+    icontinuar1 = pygame.image.load("../assets/Items/continuar.png").convert_alpha()
+    icontinuar2 = pygame.image.load("../assets/Items/continuar1.png").convert_alpha()
+    ireiniciar1 = pygame.image.load("../assets/Items/reiniciar.png").convert_alpha()
+    ireiniciar2 = pygame.image.load("../assets/Items/reiniciar1.png").convert_alpha()
+    ihome1 = pygame.image.load("../assets/Items/home.png").convert_alpha()
+    ihome2 = pygame.image.load("../assets/Items/home1.png").convert_alpha()
+    cursor1 = Cursor()
+    continuar = Button(icontinuar1,icontinuar2,400,720/2-100)
+    reiniciar = Button(ireiniciar1,ireiniciar2,720,720/2-100)
+    home = Button(ihome1,ihome2,570,720/2+150)
+    while salir!=True: #Loop principal
+        for event in pygame.event.get(): #Corre todos los eventos en pygame
+            if event.type == pygame.QUIT:
+                salir=True
+                pygame.quit()
+                sys.exit()
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if cursor1.colliderect(continuar.rect):
+                salir=True
+            if cursor1.colliderect(reiniciar.rect):
+                global seconds
+                seconds = 0
+                player.points = 0
+                player.lifes = life
+                salir = True
+            if cursor1.colliderect(home.rect):
+                seconds = 100
+                salir = True
+
+
+
+        cursor1.update()
+        ventana.fill(blanco)
+        ventana.blit(ifondo,(200,0))
+        continuar.update(ventana,cursor1)
+        reiniciar.update(ventana,cursor1)
+        home.update(ventana,cursor1)
         pygame.display.update()
