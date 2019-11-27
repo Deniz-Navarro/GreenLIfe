@@ -3,7 +3,7 @@ from random import randint
 from pygame.locals import *
 from juego import *
 
-def world1():
+def world1(menu):
     pygame.init()
     ventana=pygame.display.set_mode([1280,720])
     salir=False

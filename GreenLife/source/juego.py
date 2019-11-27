@@ -20,12 +20,12 @@ class Character(pygame.sprite.Sprite):
     def draw(self,surface): #Draw Character
         surface.blit(self.ipersonaje,self.rect)
 
-    def move(self,event,termino): #Player move
+    def move(self,event,termino,sound1): #Player move
         if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
                     if self.rect.top == 360:
                         self.salto = True
-
+                        sound1.play()
         if event.type == pygame.KEYUP:
                 if event.key == pygame.K_UP:
                     self.salto = False
@@ -61,7 +61,7 @@ class Enemy(pygame.sprite.Sprite):
     def draw(self,surface): #Enemy Draw
         surface.blit(self.iciclista,self.rect)
 
-    def collision(self,player): #Enemy Collision
+    def collision(self,player,sound2): #Enemy Collision
         (xr,yr)=(player.rect.left,player.rect.top)
         self.rect.left -= self.speed
         if self.rect.colliderect(player.rect):
@@ -70,6 +70,7 @@ class Enemy(pygame.sprite.Sprite):
             self.rect.top = 425
             global seconds
             seconds += 5
+            sound2.play()
         if self.rect.left <= -20:
             self.rect.left= 1450
             self.rect.top = 425
@@ -87,7 +88,7 @@ class Object(pygame.sprite.Sprite):
     def draw(self,surface): #Enemy Draw
         surface.blit(self.iobject,self.rect)
 
-    def collision(self,player,points): #Enemy Collision
+    def collision(self,player,points,sound3): #Enemy Collision
         (xr,yr)=(player.rect.left,player.rect.top)
         self.rect.left -= self.speed
         if self.rect.colliderect(player.rect):
@@ -95,6 +96,7 @@ class Object(pygame.sprite.Sprite):
             self.rect.top = randint(200,400)
             self.rect.left = randint(1280,2000)
             player.points+=points
+            sound3.play()
         if self.rect.left <= -40:
             self.rect.top = randint(200,400)
             self.rect.left = randint(1280,2000)
@@ -144,12 +146,23 @@ def Game(endgame,fondo,life,venemy,vobject1,vobject2,goal,pointsg,tlimit,goal2):
     blanco=(255,255,255)
     altlimit = False
     cx = 1300
+
+    #Music and Sounds
+    juego = pygame.mixer.music.load("../assets/Sounds/juego.mpeg")
+    juego = pygame.mixer.music.play()
+    sound1 = pygame.mixer.Sound("../assets/Sounds/salto.wav")
+    sound2 = pygame.mixer.Sound("../assets/Sounds/damage.wav")
+    sound3 = pygame.mixer.Sound("../assets/Sounds/point.wav")
+    sound4 = pygame.mixer.Sound("../assets/Sounds/lose.wav")
+    sound5 = pygame.mixer.Sound("../assets/Sounds/winner.wav")
     #Images
     if fondo == 1:
         ifondo = pygame.image.load("../assets/Fondos/esc11.png").convert_alpha()
+        fondoInicial = pygame.image.load("../assets/Fondos/esc11.png").convert_alpha()
 
     if fondo == 2:
         ifondo = pygame.image.load("../assets/Fondos/esc2.png").convert_alpha()
+        fondoInicial = pygame.image.load("../assets/Fondos/esc2.png").convert_alpha()
     ipapel = pygame.image.load("../assets/Items/papel.png").convert_alpha()
     iperiodico = pygame.image.load("../assets/Items/periodico.png").convert_alpha()
     ciclista = pygame.image.load("../assets/Personajes/NPC/ciclista.png").convert_alpha()
@@ -183,18 +196,23 @@ def Game(endgame,fondo,life,venemy,vobject1,vobject2,goal,pointsg,tlimit,goal2):
         for event in pygame.event.get(): #Corre todos los eventos en pygame
             if event.type == pygame.QUIT:
                 endgame=True
-                seconds = 0
+                pygame.quit()
+                sys.exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    mpause(player,life)
+                    mpause(player,life,juego)
                     if seconds == 0:
                         piedra.rect.left = 1300
                         objeto.rect.top, objeto.rect.left = randint(160,400), randint(1280,1500)
                         objeto2.rect.top, objeto2.rect.left = randint(160,400), randint(1280,1500)
+                        ifondo = fondoInicial
+                        juego = pygame.mixer.music.play()
                     if seconds == 100:
                         endgame=True
                         seconds = 0
-            player.move(event,termino)
+                if event.key == pygame.K_p:
+                    sound4.play()
+            player.move(event,termino,sound1)
         if player.salto == True and player.rect.top >= 160 and altlimit == False:
             player.rect.top -=40
         if player.salto == False and player.rect.top < 720/2 and altlimit == False:
@@ -223,9 +241,9 @@ def Game(endgame,fondo,life,venemy,vobject1,vobject2,goal,pointsg,tlimit,goal2):
         reloj1.tick(20) #Frame Counter
         #End Game
         if termino == False:
-            piedra.collision(player)
-            objeto.collision(player,5)
-            objeto2.collision(player,10)
+            piedra.collision(player,sound2)
+            objeto.collision(player,5,sound3)
+            objeto2.collision(player,10,sound3)
             cx -= 20
             if cx <= -1300:
                 cx = 1300
@@ -245,25 +263,43 @@ def Game(endgame,fondo,life,venemy,vobject1,vobject2,goal,pointsg,tlimit,goal2):
         if win == False:
             if player.lifes == 0 or seconds >= tlimit:
                 termino = True
-                ventana.fill(rojo)
-                player.lose(ventana,fuente2)
+                youlose(player,life,win,sound4,juego)
+                if seconds == 0:
+                    piedra.rect.left = 1300
+                    objeto.rect.top, objeto.rect.left = randint(160,400), randint(1280,1500)
+                    objeto2.rect.top, objeto2.rect.left = randint(160,400), randint(1280,1500)
+                    termino = False
+                    ifondo = fondoInicial
+                if seconds == 100:
+                    endgame=True
+                    seconds = 0
         #Win Condition
         if player.points >= pointsg and seconds < tlimit or win == True:
             termino = True
-            ventana.fill(verde)
-            player.win(ventana,fuente2)
             win = True
+            youlose(player,life,win,sound5,juego)
+            if seconds == 0:
+                piedra.rect.left = 1300
+                objeto.rect.top, objeto.rect.left = randint(160,400), randint(1280,1500)
+                objeto2.rect.top, objeto2.rect.left = randint(160,400), randint(1280,1500)
+                termino = False
+                win = False
+                ifondo = fondoInicial
+            if seconds == 100:
+                endgame=True
+                seconds = 0
         if endgame == True:
             seconds = 0
         pygame.display.update()
 
-def mpause(player,life):
+
+def mpause(player,life,juego):
     pygame.init()
     ventana=pygame.display.set_mode([1280,720])
     salir=False
     fuente1 = pygame.font.SysFont ("Arial",30,True,False)
     fuente2 = pygame.font.SysFont ("Arial",60,True,False)
-    blanco = (255,255,255)
+    blanco = (179,19,176)
     reloj1=pygame.time.Clock()
     ifondo = pygame.image.load("../assets/Fondos/Pause.png").convert_alpha()
     icontinuar1 = pygame.image.load("../assets/Items/continuar.png").convert_alpha()
@@ -276,6 +312,7 @@ def mpause(player,life):
     continuar = Button(icontinuar1,icontinuar2,400,720/2-100)
     reiniciar = Button(ireiniciar1,ireiniciar2,720,720/2-100)
     home = Button(ihome1,ihome2,570,720/2+150)
+    juego = pygame.mixer.music.pause( )
     while salir!=True: #Loop principal
         for event in pygame.event.get(): #Corre todos los eventos en pygame
             if event.type == pygame.QUIT:
@@ -285,12 +322,14 @@ def mpause(player,life):
         if event.type == pygame.MOUSEBUTTONDOWN:
             if cursor1.colliderect(continuar.rect):
                 salir=True
+                juego = pygame.mixer.music.unpause( )
             if cursor1.colliderect(reiniciar.rect):
                 global seconds
                 seconds = 0
                 player.points = 0
                 player.lifes = life
                 salir = True
+                juego = pygame.mixer.music.stop()
             if cursor1.colliderect(home.rect):
                 seconds = 100
                 salir = True
@@ -301,6 +340,57 @@ def mpause(player,life):
         ventana.fill(blanco)
         ventana.blit(ifondo,(200,0))
         continuar.update(ventana,cursor1)
+        reiniciar.update(ventana,cursor1)
+        home.update(ventana,cursor1)
+        pygame.display.update()
+
+def youlose(player,life,win,sound,juego):
+    pygame.init()
+    ventana=pygame.display.set_mode([1280,720])
+    salir=False
+    fuente1 = pygame.font.SysFont ("Arial",30,True,False)
+    fuente2 = pygame.font.SysFont ("Arial",60,True,False)
+    blanco = (255,255,255)
+    rojo=(200,20,50)
+    verde=(50,205,50)
+    reloj1=pygame.time.Clock()
+    ifondo = pygame.image.load("../assets/Fondos/Pause.png").convert_alpha()
+    ireiniciar1 = pygame.image.load("../assets/Items/reiniciar.png").convert_alpha()
+    ireiniciar2 = pygame.image.load("../assets/Items/reiniciar1.png").convert_alpha()
+    ihome1 = pygame.image.load("../assets/Items/home.png").convert_alpha()
+    ihome2 = pygame.image.load("../assets/Items/home1.png").convert_alpha()
+    cursor1 = Cursor()
+    reiniciar = Button(ireiniciar1,ireiniciar2,400,720/2)
+    home = Button(ihome1,ihome2,700,720/2)
+    juego = pygame.mixer.music.stop()
+    sound.play()
+    while salir!=True: #Loop principal
+        for event in pygame.event.get(): #Corre todos los eventos en pygame
+            if event.type == pygame.QUIT:
+                salir=True
+                pygame.quit()
+                sys.exit()
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if cursor1.colliderect(reiniciar.rect):
+                global seconds
+                seconds = 0
+                player.points = 0
+                player.lifes = life
+                salir = True
+                juego = pygame.mixer.music.play()
+            if cursor1.colliderect(home.rect):
+                seconds = 100
+                salir = True
+
+
+
+        cursor1.update()
+        if win == True:
+            ventana.fill(verde)
+            player.win(ventana,fuente2)
+        if win == False:
+            ventana.fill(rojo)
+            player.lose(ventana,fuente2)
         reiniciar.update(ventana,cursor1)
         home.update(ventana,cursor1)
         pygame.display.update()

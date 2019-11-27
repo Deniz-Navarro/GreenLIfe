@@ -5,7 +5,7 @@ from juego import *
 from world1 import *
 from world2 import *
 
-def munditos():
+def munditos(menu):
     pygame.init()
     ventana=pygame.display.set_mode([1280,720])
     salir=False
@@ -30,9 +30,9 @@ def munditos():
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if cursor1.colliderect(mundo1.rect):
-                    world1()
+                    world1(menu)
                 if cursor1.colliderect(mundo2.rect):
-                    world2()
+                    world2(menu)
                 if cursor1.colliderect(back.rect):
                     salir=True
 
