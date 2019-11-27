@@ -20,12 +20,13 @@ class Character(pygame.sprite.Sprite):
     def draw(self,surface): #Draw Character
         surface.blit(self.ipersonaje,self.rect)
 
-    def move(self,event,termino,sound1): #Player move
+    def move(self,event,termino,sound1,sonido): #Player move
         if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
                     if self.rect.top == 360:
                         self.salto = True
-                        sound1.play()
+                        if sonido == True:
+                            sound1.play()
         if event.type == pygame.KEYUP:
                 if event.key == pygame.K_UP:
                     self.salto = False
@@ -61,7 +62,7 @@ class Enemy(pygame.sprite.Sprite):
     def draw(self,surface): #Enemy Draw
         surface.blit(self.iciclista,self.rect)
 
-    def collision(self,player,sound2): #Enemy Collision
+    def collision(self,player,sound2,sonido): #Enemy Collision
         (xr,yr)=(player.rect.left,player.rect.top)
         self.rect.left -= self.speed
         if self.rect.colliderect(player.rect):
@@ -70,7 +71,8 @@ class Enemy(pygame.sprite.Sprite):
             self.rect.top = 425
             global seconds
             seconds += 5
-            sound2.play()
+            if sonido == True:
+                sound2.play()
         if self.rect.left <= -20:
             self.rect.left= 1450
             self.rect.top = 425
@@ -88,7 +90,7 @@ class Object(pygame.sprite.Sprite):
     def draw(self,surface): #Enemy Draw
         surface.blit(self.iobject,self.rect)
 
-    def collision(self,player,points,sound3): #Enemy Collision
+    def collision(self,player,points,sound3,sonido): #Enemy Collision
         (xr,yr)=(player.rect.left,player.rect.top)
         self.rect.left -= self.speed
         if self.rect.colliderect(player.rect):
@@ -96,7 +98,8 @@ class Object(pygame.sprite.Sprite):
             self.rect.top = randint(200,400)
             self.rect.left = randint(1280,2000)
             player.points+=points
-            sound3.play()
+            if sonido == True:
+                sound3.play()
         if self.rect.left <= -40:
             self.rect.top = randint(200,400)
             self.rect.left = randint(1280,2000)
@@ -122,7 +125,7 @@ class Button(pygame.sprite.Sprite):
 
         surface.blit(self.imagen_actual,self.rect)
 
-def Game(endgame,fondo,life,venemy,vobject1,vobject2,goal,pointsg,tlimit,goal2):
+def Game(endgame,fondo,life,venemy,vobject1,vobject2,goal,pointsg,tlimit,goal2,music,sonido):
     ss = 0
     def crono():
         if endgame == False:
@@ -149,7 +152,8 @@ def Game(endgame,fondo,life,venemy,vobject1,vobject2,goal,pointsg,tlimit,goal2):
 
     #Music and Sounds
     juego = pygame.mixer.music.load("../assets/Sounds/juego.mpeg")
-    juego = pygame.mixer.music.play()
+    if music == True:
+        juego = pygame.mixer.music.play()
     sound1 = pygame.mixer.Sound("../assets/Sounds/salto.wav")
     sound2 = pygame.mixer.Sound("../assets/Sounds/damage.wav")
     sound3 = pygame.mixer.Sound("../assets/Sounds/point.wav")
@@ -200,19 +204,20 @@ def Game(endgame,fondo,life,venemy,vobject1,vobject2,goal,pointsg,tlimit,goal2):
                 sys.exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    mpause(player,life,juego)
+                    mpause(player,life,juego,music)
                     if seconds == 0:
                         piedra.rect.left = 1300
                         objeto.rect.top, objeto.rect.left = randint(160,400), randint(1280,1500)
                         objeto2.rect.top, objeto2.rect.left = randint(160,400), randint(1280,1500)
                         ifondo = fondoInicial
-                        juego = pygame.mixer.music.play()
+                        if music == True:
+                            juego = pygame.mixer.music.play()
                     if seconds == 100:
                         endgame=True
                         seconds = 0
                 if event.key == pygame.K_p:
                     sound4.play()
-            player.move(event,termino,sound1)
+            player.move(event,termino,sound1,sonido)
         if player.salto == True and player.rect.top >= 160 and altlimit == False:
             player.rect.top -=40
         if player.salto == False and player.rect.top < 720/2 and altlimit == False:
@@ -241,9 +246,9 @@ def Game(endgame,fondo,life,venemy,vobject1,vobject2,goal,pointsg,tlimit,goal2):
         reloj1.tick(20) #Frame Counter
         #End Game
         if termino == False:
-            piedra.collision(player,sound2)
-            objeto.collision(player,5,sound3)
-            objeto2.collision(player,10,sound3)
+            piedra.collision(player,sound2,sonido)
+            objeto.collision(player,5,sound3,sonido)
+            objeto2.collision(player,10,sound3,sonido)
             cx -= 20
             if cx <= -1300:
                 cx = 1300
@@ -263,7 +268,7 @@ def Game(endgame,fondo,life,venemy,vobject1,vobject2,goal,pointsg,tlimit,goal2):
         if win == False:
             if player.lifes == 0 or seconds >= tlimit:
                 termino = True
-                youlose(player,life,win,sound4,juego)
+                youlose(player,life,win,sound4,juego,sonido,music)
                 if seconds == 0:
                     piedra.rect.left = 1300
                     objeto.rect.top, objeto.rect.left = randint(160,400), randint(1280,1500)
@@ -277,7 +282,7 @@ def Game(endgame,fondo,life,venemy,vobject1,vobject2,goal,pointsg,tlimit,goal2):
         if player.points >= pointsg and seconds < tlimit or win == True:
             termino = True
             win = True
-            youlose(player,life,win,sound5,juego)
+            youlose(player,life,win,sound5,juego,sonido,music)
             if seconds == 0:
                 piedra.rect.left = 1300
                 objeto.rect.top, objeto.rect.left = randint(160,400), randint(1280,1500)
@@ -293,7 +298,7 @@ def Game(endgame,fondo,life,venemy,vobject1,vobject2,goal,pointsg,tlimit,goal2):
         pygame.display.update()
 
 
-def mpause(player,life,juego):
+def mpause(player,life,juego,music):
     pygame.init()
     ventana=pygame.display.set_mode([1280,720])
     salir=False
@@ -333,6 +338,10 @@ def mpause(player,life,juego):
             if cursor1.colliderect(home.rect):
                 seconds = 100
                 salir = True
+                if music == True:
+                    menu = pygame.mixer.music.load("../assets/Sounds/menu.mp3")
+                    menu = pygame.mixer.music.play()
+
 
 
 
@@ -344,7 +353,7 @@ def mpause(player,life,juego):
         home.update(ventana,cursor1)
         pygame.display.update()
 
-def youlose(player,life,win,sound,juego):
+def youlose(player,life,win,sound,juego,sonido,music):
     pygame.init()
     ventana=pygame.display.set_mode([1280,720])
     salir=False
@@ -362,8 +371,9 @@ def youlose(player,life,win,sound,juego):
     cursor1 = Cursor()
     reiniciar = Button(ireiniciar1,ireiniciar2,400,720/2)
     home = Button(ihome1,ihome2,700,720/2)
-    juego = pygame.mixer.music.stop()
-    sound.play()
+    juego = pygame.mixer.music.pause()
+    if sonido == True:
+        sound.play()
     while salir!=True: #Loop principal
         for event in pygame.event.get(): #Corre todos los eventos en pygame
             if event.type == pygame.QUIT:
@@ -381,6 +391,9 @@ def youlose(player,life,win,sound,juego):
             if cursor1.colliderect(home.rect):
                 seconds = 100
                 salir = True
+                if music == True:
+                    menu = pygame.mixer.music.load("../assets/Sounds/menu.mp3")
+                    menu = pygame.mixer.music.play()
 
 
 

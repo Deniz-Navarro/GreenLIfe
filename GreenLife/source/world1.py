@@ -3,7 +3,7 @@ from random import randint
 from pygame.locals import *
 from juego import *
 
-def world1(menu):
+def world1(music,sonido):
     pygame.init()
     ventana=pygame.display.set_mode([1280,720])
     salir=False
@@ -34,15 +34,15 @@ def world1(menu):
                 if cursor1.colliderect(lvl1.rect):
                     objetive =fuente1.render("Obten 50 puntos en 30 segundos!",0,(0,0,0))
                     objetive2 =fuente2.render("Obten 50 puntos en 30 segundos!",0,(0,0,0))
-                    Game(False,1,7,20,10,10,objetive,50,30,objetive2)
+                    Game(False,1,7,20,10,10,objetive,50,30,objetive2,music,sonido)
                 if cursor1.colliderect(lvl2.rect):
                     objetive =fuente1.render("Obten 70 puntos en 35 segundos",0,(0,0,0))
                     objetive2 =fuente2.render("Obten 70 puntos en 35 segundos",0,(0,0,0))
-                    Game(False,1,5,20,15,15,objetive,70,35,objetive2)
+                    Game(False,1,5,20,15,15,objetive,70,35,objetive2,music,sonido)
                 if cursor1.colliderect(lvl3.rect):
                     objetive =fuente1.render("Obten 100 puntos en 30 segundos",0,(0,0,0))
                     objetive2 =fuente2.render("Obten 100 puntos en 30 segundos",0,(0,0,0))
-                    Game(False,1,5,25,20,20,objetive,100,30,objetive2)
+                    Game(False,1,5,25,20,20,objetive,100,30,objetive2,music,sonido)
                 if cursor1.colliderect(back.rect):
                     salir=True
 

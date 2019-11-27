@@ -3,7 +3,7 @@ from random import randint
 from pygame.locals import *
 from juego import *
 
-def world2(menu):
+def world2(music,sonido):
     pygame.init()
     ventana=pygame.display.set_mode([1280,720])
     salir=False
@@ -11,6 +11,9 @@ def world2(menu):
     fuente2 = pygame.font.SysFont ("Arial",60,True,False)
     naranjita = (139,81,143)
     reloj1=pygame.time.Clock()
+    repetir = True
+    if music == True:
+        repetir = False
     ilvl1 = pygame.image.load("../assets/Items/nvl1.png").convert_alpha()
     ilvl11 = pygame.image.load("../assets/Items/nvl11.png").convert_alpha()
     ilvl2 = pygame.image.load("../assets/Items/nvl2.png").convert_alpha()
@@ -34,15 +37,15 @@ def world2(menu):
                 if cursor1.colliderect(lvl1.rect):
                     objetive =fuente1.render("Obten 100 puntos en 30 segundos!",0,(0,0,0))
                     objetive2 =fuente2.render("Obten 100 puntos en 30 segundos!",0,(0,0,0))
-                    Game(False,2,5,25,25,20,objetive,100,25,objetive2)
+                    Game(False,2,5,25,25,20,objetive,100,25,objetive2,music,sonido)
                 if cursor1.colliderect(lvl2.rect):
                     objetive =fuente1.render("Obten 70 puntos en 30 segundos",0,(0,0,0))
                     objetive2 =fuente2.render("Obten 70 puntos en 30 segundos",0,(0,0,0))
-                    Game(False,2,3,25,25,20,objetive,70,35,objetive2)
+                    Game(False,2,3,25,25,20,objetive,70,35,objetive2,music,sonido)
                 if cursor1.colliderect(lvl3.rect):
                     objetive =fuente1.render("Obten 80 puntos en 20 segundos",0,(0,0,0))
                     objetive2 =fuente2.render("Obten 80 puntos en 20 segundos",0,(0,0,0))
-                    Game(False,2,3,20,30,25,objetive,80,20,objetive2)
+                    Game(False,2,3,20,30,25,objetive,80,20,objetive2,music,sonido)
                 if cursor1.colliderect(back.rect):
                     salir=True
 

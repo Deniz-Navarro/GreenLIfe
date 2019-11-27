@@ -5,12 +5,13 @@ from juego import *
 from world1 import *
 from world2 import *
 
-def munditos(menu):
+def munditos(music,sonido):
     pygame.init()
     ventana=pygame.display.set_mode([1280,720])
     salir=False
     fuente1 = pygame.font.SysFont ("Arial",30,True,False)
     verdesito = (15,210,197)
+    music = music
     reloj1=pygame.time.Clock()
     imundo1 = pygame.image.load("../assets/Items/mundo1.png").convert_alpha()
     imundo12 = pygame.image.load("../assets/Items/mundo11.png").convert_alpha()
@@ -30,9 +31,9 @@ def munditos(menu):
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if cursor1.colliderect(mundo1.rect):
-                    world1(menu)
+                    world1(music,sonido)
                 if cursor1.colliderect(mundo2.rect):
-                    world2(menu)
+                    world2(music,sonido)
                 if cursor1.colliderect(back.rect):
                     salir=True
 
