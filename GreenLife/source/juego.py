@@ -338,8 +338,8 @@ def mpause(player,life,juego,music):
             if cursor1.colliderect(home.rect):
                 seconds = 100
                 salir = True
+                menu = pygame.mixer.music.load("../assets/Sounds/menu.mp3")
                 if music == True:
-                    menu = pygame.mixer.music.load("../assets/Sounds/menu.mp3")
                     menu = pygame.mixer.music.play()
 
 
@@ -387,12 +387,13 @@ def youlose(player,life,win,sound,juego,sonido,music):
                 player.points = 0
                 player.lifes = life
                 salir = True
-                juego = pygame.mixer.music.play()
+                if music == True:
+                    Sjuego = pygame.mixer.music.play()
             if cursor1.colliderect(home.rect):
                 seconds = 100
                 salir = True
+                menu = pygame.mixer.music.load("../assets/Sounds/menu.mp3")
                 if music == True:
-                    menu = pygame.mixer.music.load("../assets/Sounds/menu.mp3")
                     menu = pygame.mixer.music.play()
 
 

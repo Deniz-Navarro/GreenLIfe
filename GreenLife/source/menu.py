@@ -13,8 +13,6 @@ def menu():
     fuente1 = pygame.font.SysFont ("Arial",30,True,False)
     black = (0,0,0)
     reloj1=pygame.time.Clock()
-    menu = pygame.mixer.music.load("../assets/Sounds/menu.mp3")
-    menu = pygame.mixer.music.play()
     mundo1 = pygame.image.load("../assets/Items/mundo1.png").convert_alpha()
     ifondo = pygame.image.load("../assets/Fondos/Menu.png").convert_alpha()
     start1 = pygame.image.load("../assets/Items/botons1.png").convert_alpha()
@@ -23,6 +21,8 @@ def menu():
     equis2 = pygame.image.load("../assets/Items/equis1.png").convert_alpha()
     icon = pygame.image.load("../assets/Items/configuracion.png").convert_alpha()
     icon1 = pygame.image.load("../assets/Items/configuracion1.png").convert_alpha()
+    menu = pygame.mixer.music.load("../assets/Sounds/menu.mp3")
+    menu = pygame.mixer.music.play()
     start = Button(start1,start2,1280/2-100,720/2-225)
     config = Button(icon,icon1,600,425)
     equis = Button(equis1,equis2,600,575)
@@ -42,7 +42,6 @@ def menu():
                     salir=True
                     pygame.quit()
                     sys.exit()
-
         cursor1.update()
         ventana.fill(black)
         ventana.blit(ifondo,(0,0))
@@ -67,9 +66,11 @@ def mopciones():
     back1 = pygame.image.load("../assets/Items/back.png").convert_alpha()
     back2 = pygame.image.load("../assets/Items/back1.png").convert_alpha()
     cursor1 = Cursor()
+    global music
+    global sonido
     sonidoh = Button(isound2,isound,450,720/2-150)
     sonidod = Button(isoundd,isoundd2,700,720/2-150)
-    ssonidoh = Button(isound,isound2,450,720/2)
+    ssonidoh = Button(isound2,isound,450,720/2)
     ssonidod = Button(isoundd,isoundd2,700,720/2)
     back = Button(back1,back2,1050,500)
     while salir!=True: #Loop principal
@@ -81,22 +82,32 @@ def mopciones():
         if event.type == pygame.MOUSEBUTTONDOWN:
             if cursor1.colliderect(sonidoh.rect):
                 menu = pygame.mixer.music.play()
-                global music
                 music = True
             if cursor1.colliderect(sonidod.rect):
                 menu = pygame.mixer.music.stop()
                 music = False
             if cursor1.colliderect(ssonidoh.rect):
-                global sonido
                 sonido = True
             if cursor1.colliderect(ssonidod.rect):
                 sonido = False
             if cursor1.colliderect(back.rect):
                 salir=True
-
-
-
-
+        if music == False:
+            sonidoh = Button(isound,isound2,450,720/2-150)
+        if music == False:
+            sonidod = Button(isoundd2,isoundd,700,720/2-150)
+        if sonido == False:
+            ssonidoh = Button(isound,isound2,450,720/2)
+        if sonido == False:
+            ssonidod = Button(isoundd2,isoundd,700,720/2)
+        if music == True:
+            sonidoh = Button(isound2,isound,450,720/2-150)
+        if music == True:
+            sonidod = Button(isoundd,isoundd2,700,720/2-150)
+        if sonido == True:
+            ssonidoh = Button(isound2,isound,450,720/2)
+        if sonido == True:
+            ssonidod = Button(isoundd,isoundd2,700,720/2)
         cursor1.update()
         ventana.blit(ifondo,(0,0))
         sonidoh.update(ventana,cursor1)
