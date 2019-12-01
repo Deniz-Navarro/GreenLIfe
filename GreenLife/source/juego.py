@@ -380,21 +380,21 @@ def youlose(player,life,win,sound,juego,sonido,music):
                 salir=True
                 pygame.quit()
                 sys.exit()
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if cursor1.colliderect(reiniciar.rect):
-                global seconds
-                seconds = 0
-                player.points = 0
-                player.lifes = life
-                salir = True
-                if music == True:
-                    Sjuego = pygame.mixer.music.play()
-            if cursor1.colliderect(home.rect):
-                seconds = 100
-                salir = True
-                menu = pygame.mixer.music.load("../assets/Sounds/menu.mp3")
-                if music == True:
-                    menu = pygame.mixer.music.play()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if cursor1.colliderect(reiniciar.rect):
+                    global seconds
+                    seconds = 0
+                    player.points = 0
+                    player.lifes = life
+                    salir = True
+                    if music == True:
+                        Sjuego = pygame.mixer.music.play()
+                if cursor1.colliderect(home.rect):
+                    seconds = 100
+                    salir = True
+                    menu = pygame.mixer.music.load("../assets/Sounds/menu.mp3")
+                    if music == True:
+                        menu = pygame.mixer.music.play()
 
 
 
